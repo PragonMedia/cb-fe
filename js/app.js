@@ -28,7 +28,7 @@ async function updatePhoneNumberReactive() {
   if (window.phoneNumberData && window.updatePhoneNumberInDOM) {
     window.updatePhoneNumberInDOM(
       window.phoneNumberData.phone_number,
-      window.phoneNumberData.formatted_number
+      window.phoneNumberData.formatted_number,
     );
     return;
   }
@@ -46,7 +46,7 @@ async function updatePhoneNumberReactive() {
       if (window.phoneNumberData && window.updatePhoneNumberInDOM) {
         window.updatePhoneNumberInDOM(
           window.phoneNumberData.phone_number,
-          window.phoneNumberData.formatted_number
+          window.phoneNumberData.formatted_number,
         );
       }
     } catch (error) {
@@ -81,7 +81,7 @@ async function fetchRouteData(domain, route) {
 
   try {
     const apiUrl = `/api/v1/domain-route-details?domain=${encodeURIComponent(
-      domain
+      domain,
     )}&route=${encodeURIComponent(route)}`;
     const response = await fetch(apiUrl, {
       method: "GET",
@@ -111,9 +111,9 @@ let ringbaID = "CAd4c016a37829477688c3482fb6fd01de"; // Fallback default
   // Wait a bit for routeConfig to be available
   let attempts = 0;
   const maxAttempts = 10;
-  
+
   while (!window.routeConfig && attempts < maxAttempts) {
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
     attempts++;
   }
 
@@ -440,7 +440,7 @@ function scrollToBottom() {
       scrollTop:
         object.offset().top + object.outerHeight() - $(window).height(),
     },
-    "fast"
+    "fast",
   );
 }
 
@@ -607,26 +607,70 @@ function gtag_report_conversion(url) {
 
 // Dynamic headline state: US state list and headline-state detection
 var STATE_ABBR_TO_NAME = {
-  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
-  CO: "Colorado", CT: "Connecticut", DE: "Delaware", FL: "Florida", GA: "Georgia",
-  HI: "Hawaii", ID: "Idaho", IL: "Illinois", IN: "Indiana", IA: "Iowa",
-  KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland",
-  MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi", MO: "Missouri",
-  MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire", NJ: "New Jersey",
-  NM: "New Mexico", NY: "New York", NC: "North Carolina", ND: "North Dakota", OH: "Ohio",
-  OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
-  SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont",
-  VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming",
-  DC: "District of Columbia"
+  AL: "Alabama",
+  AK: "Alaska",
+  AZ: "Arizona",
+  AR: "Arkansas",
+  CA: "California",
+  CO: "Colorado",
+  CT: "Connecticut",
+  DE: "Delaware",
+  FL: "Florida",
+  GA: "Georgia",
+  HI: "Hawaii",
+  ID: "Idaho",
+  IL: "Illinois",
+  IN: "Indiana",
+  IA: "Iowa",
+  KS: "Kansas",
+  KY: "Kentucky",
+  LA: "Louisiana",
+  ME: "Maine",
+  MD: "Maryland",
+  MA: "Massachusetts",
+  MI: "Michigan",
+  MN: "Minnesota",
+  MS: "Mississippi",
+  MO: "Missouri",
+  MT: "Montana",
+  NE: "Nebraska",
+  NV: "Nevada",
+  NH: "New Hampshire",
+  NJ: "New Jersey",
+  NM: "New Mexico",
+  NY: "New York",
+  NC: "North Carolina",
+  ND: "North Dakota",
+  OH: "Ohio",
+  OK: "Oklahoma",
+  OR: "Oregon",
+  PA: "Pennsylvania",
+  RI: "Rhode Island",
+  SC: "South Carolina",
+  SD: "South Dakota",
+  TN: "Tennessee",
+  TX: "Texas",
+  UT: "Utah",
+  VT: "Vermont",
+  VA: "Virginia",
+  WA: "Washington",
+  WV: "West Virginia",
+  WI: "Wisconsin",
+  WY: "Wyoming",
+  DC: "District of Columbia",
 };
 
-var HEADLINE_NO_STATE = "Just Announced: Get Up Your Full Burial Expenses And Unpaid Bills Covered With This New Senior Benefit";
-var HEADLINE_WITH_STATE = "Just Announced For {state} Seniors: Get Up Your Full Burial Expenses And Unpaid Bills Covered With This New Senior Benefit";
+var HEADLINE_NO_STATE =
+  "Just Announced: Get Up To $40,000 To Cover Burial Expenses And Unpaid Bills With New Senior Benefit";
+var HEADLINE_WITH_STATE =
+  "Just Announced For {state} Seniors: Get Up To $40,000 To Cover Burial Expenses And Unpaid Bills With New Senior Benefit";
 
 function setHeadlineState(name) {
   var el = document.getElementById("headline-title");
   if (!el) return;
-  el.textContent = name ? HEADLINE_WITH_STATE.replace("{state}", name) : HEADLINE_NO_STATE;
+  el.textContent = name
+    ? HEADLINE_WITH_STATE.replace("{state}", name)
+    : HEADLINE_NO_STATE;
 }
 
 function resolveStateName(value) {
@@ -640,7 +684,9 @@ function resolveStateName(value) {
 
 function initHeadlineState() {
   fetch("https://ipapi.co/json/")
-    .then(function (r) { return r.json(); })
+    .then(function (r) {
+      return r.json();
+    })
     .then(function (data) {
       if (data && data.country_code === "US" && data.region) {
         var stateName = resolveStateName(data.region) || data.region;
