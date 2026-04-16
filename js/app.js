@@ -620,8 +620,8 @@ var STATE_ABBR_TO_NAME = {
   DC: "District of Columbia"
 };
 
-var HEADLINE_NO_STATE = "Just Announced: Get Up To $40,000 To Cover Burial Expenses And Unpaid Bills With New Senior Benefit";
-var HEADLINE_WITH_STATE = "Just Announced For {state} Seniors: Get Up To $40,000 To Cover Burial Expenses And Unpaid Bills With New Senior Benefit";
+var HEADLINE_NO_STATE = "Just Announced: Get Up Your Full Burial Expenses And Unpaid Bills Covered With This New Senior Benefit";
+var HEADLINE_WITH_STATE = "Just Announced For {state} Seniors: Get Up Your Full Burial Expenses And Unpaid Bills Covered With This New Senior Benefit";
 
 function setHeadlineState(name) {
   var el = document.getElementById("headline-title");
