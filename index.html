@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en_US">
   <head>
     <meta charset="UTF-8" />
@@ -10,49 +10,48 @@
     <link rel="shortcut icon" href="./images/new-logo.png" type="image/png" />
 
     <script
-    async
-    src="https://www.googletagmanager.com/gtag/js?id=AW-16921817895"
-  ></script>
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=AW-16921817895"
+    ></script>
 
-  <script>
-    (function (w, d, s, l, i) {
-      w[l] = w[l] || [];
-      w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
-      var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s),
-        dl = l != "dataLayer" ? "&l=" + l : "";
-      j.async = true;
-      j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
-      f.parentNode.insertBefore(j, f);
-    })(window, document, "script", "dataLayer", "GTM-KG29K4HR");
-  </script>
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-KG29K4HR");
+    </script>
     <!-- End Google Tag Manager -->
-    
-   <script>
-    function trackGTG(e) {
-  const gtgValue = localStorage.getItem("gtg");
+    <script>
+      function trackGTG(e) {
+        const gtgValue = localStorage.getItem("gtg");
 
-  if (gtgValue === null) {
-    // Existing: gtg null but not qualified=yes → plancompared.com after 10s
-    setTimeout(function () {
-      window.location.href = "https://plancompared.com/";
-    }, 10000);
-  }
+        if (gtgValue === null) {
+          // Existing: gtg null but not qualified=yes → plancompared.com after 10s
+          setTimeout(function () {
+            window.location.href = "https://plancompared.com/";
+          }, 10000);
+        }
 
-  // Always push GTM event
-  window.dataLayer = window.dataLayer || [];
-  dataLayer.push({ event: "gtg_clicked" });
+        // Always push GTM event
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({ event: "gtg_clicked" });
 
-  // Fire Facebook pixel safely
-  try {
-    if (typeof fbq === "function") {
-      fbq("track", "Lead");
-    }
-  } catch (e) {}
+        // Fire Facebook pixel safely
+        try {
+          if (typeof fbq === "function") {
+            fbq("track", "Lead");
+          }
+        } catch (e) {}
 
-  // Allow normal phone call behavior (browser will show "Call this number?" prompt)
-  // No preventDefault, so the tel: link works normally
-}
+        // Allow normal phone call behavior (browser will show "Call this number?" prompt)
+        // No preventDefault, so the tel: link works normally
+      }
     </script>
 
     <!-- CRITICAL: Capture ALL original URL parameters IMMEDIATELY on page load -->
@@ -68,7 +67,7 @@
           // ALWAYS store, even if empty (to track that we've captured)
           sessionStorage.setItem(
             "original_url_params",
-            JSON.stringify(originalParams)
+            JSON.stringify(originalParams),
           );
 
           if (Object.keys(originalParams).length > 0) {
@@ -82,7 +81,7 @@
       })();
     </script>
 
-   <script>
+    <script>
       (async () => {
         // helpers - Preserve ALL original parameters when updating URL
         function pushParams(params) {
@@ -143,7 +142,7 @@
         // SINGLE API CALL - Fetch route configuration once
         window.routeConfig = null;
         const { domain, route } = getDomainAndRoute();
-        
+
         if (domain && route) {
           try {
             const apiUrl = `/api/v1/domain-route-details?domain=${encodeURIComponent(domain)}&route=${encodeURIComponent(route)}`;
@@ -160,9 +159,14 @@
                 window.routeConfig = {
                   rtkID: apiData.routeData.rtkID || "695d30597b99d8843efe802c",
                   phoneNumber: apiData.routeData.phoneNumber || "18887062564",
-                  ringbaID: apiData.routeData.ringbaID || "CAd4c016a37829477688c3482fb6fd01de",
+                  ringbaID:
+                    apiData.routeData.ringbaID ||
+                    "CAd4c016a37829477688c3482fb6fd01de",
                 };
-                console.log("Route config fetched (single API call):", window.routeConfig);
+                console.log(
+                  "Route config fetched (single API call):",
+                  window.routeConfig,
+                );
               } else {
                 window.routeConfig = {
                   rtkID: "695d30597b99d8843efe802c",
@@ -267,26 +271,36 @@
         try {
           // Use phoneNumber from routeConfig if available, otherwise fetch from PHP
           if (window.routeConfig && window.routeConfig.phoneNumber) {
-            const phoneNumber = window.routeConfig.phoneNumber.replace(/^\+/, "");
-            const formattedNumber = '+1 (' + phoneNumber.substring(1, 4) + ') ' + phoneNumber.substring(4, 7) + '-' + phoneNumber.substring(7, 11);
-            
+            const phoneNumber = window.routeConfig.phoneNumber.replace(
+              /^\+/,
+              "",
+            );
+            const formattedNumber =
+              "+1 (" +
+              phoneNumber.substring(1, 4) +
+              ") " +
+              phoneNumber.substring(4, 7) +
+              "-" +
+              phoneNumber.substring(7, 11);
+
             window.phoneNumberData = {
               phone_number: phoneNumber,
               formatted_number: formattedNumber,
             };
             console.log("phoneNumber from route config:", phoneNumber);
-            
+
             // Update phone number in DOM if elements exist
             updatePhoneNumberInDOM(phoneNumber, formattedNumber);
           } else {
             // Fallback: fetch from PHP endpoint (which will use its own fallback)
-            const phoneNumberParam = window.routeConfig && window.routeConfig.phoneNumber 
-              ? encodeURIComponent(window.routeConfig.phoneNumber) 
-              : '';
-            const numberUrl = phoneNumberParam 
+            const phoneNumberParam =
+              window.routeConfig && window.routeConfig.phoneNumber
+                ? encodeURIComponent(window.routeConfig.phoneNumber)
+                : "";
+            const numberUrl = phoneNumberParam
               ? `./number.php?phoneNumber=${phoneNumberParam}`
-              : './number.php';
-            
+              : "./number.php";
+
             const response = await fetch(numberUrl, {
               method: "GET",
               headers: {
@@ -302,10 +316,16 @@
                   phone_number: data.phone_number,
                   formatted_number: data.formatted_number,
                 };
-                console.log("phoneNumber from PHP endpoint:", data.phone_number);
-                
+                console.log(
+                  "phoneNumber from PHP endpoint:",
+                  data.phone_number,
+                );
+
                 // Update phone number in DOM if elements exist
-                updatePhoneNumberInDOM(data.phone_number, data.formatted_number);
+                updatePhoneNumberInDOM(
+                  data.phone_number,
+                  data.formatted_number,
+                );
               } else {
                 window.phoneNumberData = {
                   phone_number: "18887062564",
@@ -430,12 +450,12 @@
   <body>
     <!-- Google Tag Manager (noscript) -->
     <noscript
-    ><iframe
-    src="https://www.googletagmanager.com/ns.html?id=GTM-KG29K4HR"
-    height="0"
-    width="0"
-    style="display: none; visibility: hidden"
-  ></iframe
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-KG29K4HR"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
     ></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <main class="min-h-screen">
@@ -481,7 +501,8 @@
               style="color: rgb(75 85 99)"
               id="headline-title"
             >
-            Just Announced: Get Up To $40,000 To Cover Burial Expenses And Unpaid Bills With New Senior Benefit
+              Just Announced: Get Up Your Full Burial Expenses And Unpaid Bills
+              Covered With This New Senior Benefit
             </h2>
           </div>
           <div class="w-full md:col-span-1 text-center block">
@@ -535,7 +556,8 @@
                     class="bg-gray-200 p-3 rounded-lg shadow-xs mt-2 w-fit hidden"
                   >
                     <p class="text-md text-gray-800">
-                      Please answer two quick questions to see if you qualify for a $40,000 funeral benefit.
+                      Please answer two quick questions to see if you qualify
+                      for this funeral benefit.
                     </p>
                   </div>
                   <div
@@ -561,7 +583,6 @@
                     id="msg_q2_3"
                     class="bg-gray-200 p-3 rounded-lg shadow-xs mt-2 w-fit hidden"
                   >
-
                     <div class="grid" style="gap: 10px">
                       <button
                         class="chat-button text-white font-bold bg-blue-500 rounded-full py-3 px-12"
@@ -619,9 +640,7 @@
                     id="msg_q3_1"
                     class="bg-gray-200 p-3 rounded-lg shadow-xs mt-2 w-fit hidden"
                   >
-                    <p class="text-md text-gray-800">
-                      What is your age range?
-                    </p>
+                    <p class="text-md text-gray-800">What is your age range?</p>
                   </div>
 
                   <div
@@ -784,7 +803,8 @@
                     class="bg-gray-200 p-3 rounded-lg shadow-xs mt-2 w-fit hidden"
                   >
                     <p class="text-md text-gray-800">
-                      Tap the button below to call now to get your $40,000 funeral benefit, It only takes 2 minutes.
+                      Tap the button below to call now to get your funeral
+                      benefit, It only takes 2 minutes.
                     </p>
                   </div>
                   <div
@@ -792,8 +812,8 @@
                     class="bg-gray-200 p-3 rounded-lg shadow-xs mt-2 w-fit hidden"
                   >
                     <p class="text-md text-gray-800">
-                      Tap the button below to get your Health Allowance Card! It only
-                      takes 2 minutes.
+                      Tap the button below to get your Health Allowance Card! It
+                      only takes 2 minutes.
                     </p>
                   </div>
 
@@ -873,7 +893,7 @@
                       <a
                         id="claim-now-contact-button"
                         href="/contact"
-                        onclick="fbq('track', 'Lead');"
+                        onclick="fbq('track', 'Lead')"
                         class="chat-button text-white font-bold bg-blue-500 rounded-full py-3 px-6 ttc-button"
                         style="
                           background: #1e8ff4 !important;
@@ -941,7 +961,7 @@
     <script src="./js/jquery-3.7.1.min.js"></script>
     <script src="./js/app.js"></script>
 
-     <script>
+    <script>
       // Backup: Update phone number when DOM is ready (if early fetch hasn't completed)
       document.addEventListener("DOMContentLoaded", async function () {
         // Wait a bit to see if early fetch completed
@@ -951,7 +971,7 @@
         if (window.phoneNumberData) {
           updatePhoneNumberInDOM(
             window.phoneNumberData.phone_number,
-            window.phoneNumberData.formatted_number
+            window.phoneNumberData.formatted_number,
           );
         } else {
           // If early fetch hasn't completed, wait for it
@@ -960,7 +980,7 @@
             if (window.phoneNumberData) {
               updatePhoneNumberInDOM(
                 window.phoneNumberData.phone_number,
-                window.phoneNumberData.formatted_number
+                window.phoneNumberData.formatted_number,
               );
             }
           } catch (error) {
