@@ -262,6 +262,7 @@ let is_71plus = false;
 
 loadImages();
 
+function startChatFlow() {
 setTimeout(function () {
   $("#initTyping").remove();
   $("#msg1").removeClass("hidden").after(typingEffect());
@@ -283,6 +284,13 @@ setTimeout(function () {
     }, speed);
   }, speed);
 }, speed);
+}
+
+if (document.documentElement.classList.contains("site-ready")) {
+  startChatFlow();
+} else {
+  window.addEventListener("site-ready", startChatFlow, { once: true });
+}
 
 var buttonValue;
 var currentStep;
@@ -605,96 +613,4 @@ function gtag_report_conversion(url) {
 //   }
 // }
 
-// Dynamic headline state: US state list and headline-state detection
-var STATE_ABBR_TO_NAME = {
-  AL: "Alabama",
-  AK: "Alaska",
-  AZ: "Arizona",
-  AR: "Arkansas",
-  CA: "California",
-  CO: "Colorado",
-  CT: "Connecticut",
-  DE: "Delaware",
-  FL: "Florida",
-  GA: "Georgia",
-  HI: "Hawaii",
-  ID: "Idaho",
-  IL: "Illinois",
-  IN: "Indiana",
-  IA: "Iowa",
-  KS: "Kansas",
-  KY: "Kentucky",
-  LA: "Louisiana",
-  ME: "Maine",
-  MD: "Maryland",
-  MA: "Massachusetts",
-  MI: "Michigan",
-  MN: "Minnesota",
-  MS: "Mississippi",
-  MO: "Missouri",
-  MT: "Montana",
-  NE: "Nebraska",
-  NV: "Nevada",
-  NH: "New Hampshire",
-  NJ: "New Jersey",
-  NM: "New Mexico",
-  NY: "New York",
-  NC: "North Carolina",
-  ND: "North Dakota",
-  OH: "Ohio",
-  OK: "Oklahoma",
-  OR: "Oregon",
-  PA: "Pennsylvania",
-  RI: "Rhode Island",
-  SC: "South Carolina",
-  SD: "South Dakota",
-  TN: "Tennessee",
-  TX: "Texas",
-  UT: "Utah",
-  VT: "Vermont",
-  VA: "Virginia",
-  WA: "Washington",
-  WV: "West Virginia",
-  WI: "Wisconsin",
-  WY: "Wyoming",
-  DC: "District of Columbia",
-};
-
-var HEADLINE_WITH_STATE =
-  "{state} Residents Can Get Up To $40,000 To Cover Funeral Expenses And Unpaid Bills With This Discounted Burial Insurance Benefit";
-
-function setHeadlineState(name) {
-  var el = document.getElementById("headline-title");
-  if (!el || !name) return;
-  el.textContent = HEADLINE_WITH_STATE.replace("{state}", name);
-}
-
-function resolveStateName(value) {
-  if (!value) return null;
-  var v = value.trim();
-  var upper = v.toUpperCase();
-  if (STATE_ABBR_TO_NAME[upper]) return STATE_ABBR_TO_NAME[upper];
-  if (v.length > 2) return v;
-  return null;
-}
-
-function initHeadlineState() {
-  var geoPromise =
-    window.geoHeadlinePromise ||
-    fetch("https://ipapi.co/json/")
-      .then(function (r) {
-        return r.json();
-      })
-      .catch(function () {
-        return null;
-      });
-
-  geoPromise.then(function (data) {
-    if (data && data.country_code === "US" && data.region) {
-      var stateName = resolveStateName(data.region) || data.region;
-      setHeadlineState(stateName);
-    }
-  });
-}
-
-initHeadlineState();
+// Dynamic headline state is handled in js/headline.js
