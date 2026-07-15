@@ -262,6 +262,7 @@ let is_71plus = false;
 
 loadImages();
 
+function startChatFlow() {
 setTimeout(function () {
   $("#initTyping").remove();
   $("#msg1").removeClass("hidden").after(typingEffect());
@@ -283,6 +284,13 @@ setTimeout(function () {
     }, speed);
   }, speed);
 }, speed);
+}
+
+if (document.documentElement.classList.contains("site-ready")) {
+  startChatFlow();
+} else {
+  window.addEventListener("site-ready", startChatFlow, { once: true });
+}
 
 var buttonValue;
 var currentStep;
@@ -673,6 +681,15 @@ function setHeadlineState(name) {
     : HEADLINE_NO_STATE;
 }
 
+function showSite() {
+  document.documentElement.classList.add("site-ready");
+  var loader = document.getElementById("site-loader");
+  if (loader) {
+    loader.setAttribute("aria-busy", "false");
+  }
+  window.dispatchEvent(new Event("site-ready"));
+}
+
 function resolveStateName(value) {
   if (!value) return null;
   var v = value.trim();
@@ -683,10 +700,23 @@ function resolveStateName(value) {
 }
 
 function initHeadlineState() {
-  fetch("https://ipapi.co/json/")
-    .then(function (r) {
-      return r.json();
-    })
+  var geoPromise =
+    window.geoHeadlinePromise ||
+    fetch("https://ipapi.co/json/")
+      .then(function (r) {
+        return r.json();
+      })
+      .catch(function () {
+        return null;
+      });
+
+  var timeoutPromise = new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve(null);
+    }, 5000);
+  });
+
+  Promise.race([geoPromise, timeoutPromise])
     .then(function (data) {
       if (data && data.country_code === "US" && data.region) {
         var stateName = resolveStateName(data.region) || data.region;
@@ -697,6 +727,9 @@ function initHeadlineState() {
     })
     .catch(function () {
       setHeadlineState(null);
+    })
+    .finally(function () {
+      showSite();
     });
 }
 
