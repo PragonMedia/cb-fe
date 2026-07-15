@@ -663,7 +663,7 @@ var STATE_ABBR_TO_NAME = {
 var HEADLINE_NO_STATE =
   "Just Announced: Get Up To $40,000 To Cover Funeral Expenses And Unpaid Bills With This Discounted Burial Insurance Benefit";
 var HEADLINE_WITH_STATE =
-  "Just Announced: Get Up To $40,000 To Cover Funeral Expenses And Unpaid Bills With This {state} State Discounted Burial Insurance Benefit";
+  "{state} Residents Announcement: Get Up To $40,000 To Cover Funeral Expenses And Unpaid Bills With This Discounted Burial Insurance Benefit";
 
 function setHeadlineState(name) {
   var el = document.getElementById("headline-title");
