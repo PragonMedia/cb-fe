@@ -262,7 +262,6 @@ let is_71plus = false;
 
 loadImages();
 
-function startChatFlow() {
 setTimeout(function () {
   $("#initTyping").remove();
   $("#msg1").removeClass("hidden").after(typingEffect());
@@ -284,13 +283,6 @@ setTimeout(function () {
     }, speed);
   }, speed);
 }, speed);
-}
-
-if (document.documentElement.classList.contains("site-ready")) {
-  startChatFlow();
-} else {
-  window.addEventListener("site-ready", startChatFlow, { once: true });
-}
 
 var buttonValue;
 var currentStep;
@@ -668,26 +660,13 @@ var STATE_ABBR_TO_NAME = {
   DC: "District of Columbia",
 };
 
-var HEADLINE_NO_STATE =
-  "Just Announced: Get Up To $40,000 To Cover Funeral Expenses And Unpaid Bills With This Discounted Burial Insurance Benefit";
 var HEADLINE_WITH_STATE =
   "{state} Residents Announcement: Get Up To $40,000 To Cover Funeral Expenses And Unpaid Bills With This Discounted Burial Insurance Benefit";
 
 function setHeadlineState(name) {
   var el = document.getElementById("headline-title");
-  if (!el) return;
-  el.textContent = name
-    ? HEADLINE_WITH_STATE.replace("{state}", name)
-    : HEADLINE_NO_STATE;
-}
-
-function showSite() {
-  document.documentElement.classList.add("site-ready");
-  var loader = document.getElementById("site-loader");
-  if (loader) {
-    loader.setAttribute("aria-busy", "false");
-  }
-  window.dispatchEvent(new Event("site-ready"));
+  if (!el || !name) return;
+  el.textContent = HEADLINE_WITH_STATE.replace("{state}", name);
 }
 
 function resolveStateName(value) {
@@ -713,24 +692,15 @@ function initHeadlineState() {
   var timeoutPromise = new Promise(function (resolve) {
     setTimeout(function () {
       resolve(null);
-    }, 5000);
+    }, 300);
   });
 
-  Promise.race([geoPromise, timeoutPromise])
-    .then(function (data) {
-      if (data && data.country_code === "US" && data.region) {
-        var stateName = resolveStateName(data.region) || data.region;
-        setHeadlineState(stateName);
-      } else {
-        setHeadlineState(null);
-      }
-    })
-    .catch(function () {
-      setHeadlineState(null);
-    })
-    .finally(function () {
-      showSite();
-    });
+  Promise.race([geoPromise, timeoutPromise]).then(function (data) {
+    if (data && data.country_code === "US" && data.region) {
+      var stateName = resolveStateName(data.region) || data.region;
+      setHeadlineState(stateName);
+    }
+  });
 }
 
 initHeadlineState();
