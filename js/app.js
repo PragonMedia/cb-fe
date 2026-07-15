@@ -662,16 +662,11 @@ var STATE_ABBR_TO_NAME = {
 
 var HEADLINE_WITH_STATE =
   "{state} Residents Can Get Up To $40,000 To Cover Funeral Expenses And Unpaid Bills With This Discounted Burial Insurance Benefit";
-var HEADLINE_FALLBACK =
-  "Get Up To $40,000 To Cover Funeral Expenses And Unpaid Bills With This Discounted Burial Insurance Benefit";
-var HEADLINE_GEO_WINDOW_MS = 500;
 
-function revealHeadline(text) {
+function setHeadlineState(name) {
   var el = document.getElementById("headline-title");
-  if (!el) return;
-  el.textContent = text;
-  el.style.visibility = "visible";
-  el.removeAttribute("aria-busy");
+  if (!el || !name) return;
+  el.textContent = HEADLINE_WITH_STATE.replace("{state}", name);
 }
 
 function resolveStateName(value) {
@@ -684,16 +679,6 @@ function resolveStateName(value) {
 }
 
 function initHeadlineState() {
-  var revealed = false;
-  var fallbackTimer = null;
-
-  function revealOnce(text) {
-    if (revealed) return;
-    revealed = true;
-    if (fallbackTimer) clearTimeout(fallbackTimer);
-    revealHeadline(text);
-  }
-
   var geoPromise =
     window.geoHeadlinePromise ||
     fetch("https://ipapi.co/json/")
@@ -707,13 +692,9 @@ function initHeadlineState() {
   geoPromise.then(function (data) {
     if (data && data.country_code === "US" && data.region) {
       var stateName = resolveStateName(data.region) || data.region;
-      revealOnce(HEADLINE_WITH_STATE.replace("{state}", stateName));
+      setHeadlineState(stateName);
     }
   });
-
-  fallbackTimer = setTimeout(function () {
-    revealOnce(HEADLINE_FALLBACK);
-  }, HEADLINE_GEO_WINDOW_MS);
 }
 
 initHeadlineState();
